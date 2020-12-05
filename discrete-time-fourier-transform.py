@@ -52,16 +52,19 @@ def discrete_time_fourier_transform(time_domain_sequence):
 if __name__ == '__main__':
 
 	sampling_rate = 100 # if it is not known, set this to `None'
+	normalise = True # whether frequency magnitude should be normalised to the range from -1 to 1
 
 	# input sequence (values be greater than or equal to -1 but less than or equal to 1)
 	# time_domain_sequence = [0.3415063509461096, 0.8365163037378079, 0.2241438680420134, -0.1294095225512604] # Db4 low-pass
 	# time_domain_sequence = [-0.1294095225512604, -0.2241438680420134, 0.8365163037378079, -0.3415063509461096] # Db4 high-pass
 	# time_domain_sequence = [0.25, 0.75, 0.75, 0.25] # biorthogonal low-pass
 	# time_domain_sequence = [-0.25, -0.75, 0.75, 0.25] # biorthogonal high-pass
-	time_domain_sequence = np.sin(2 * np.pi * 1 * np.arange(0, 1, 1 / sampling_rate))
+	time_domain_sequence = np.sin(2 * np.pi * 20 * np.arange(0, 1, 1 / sampling_rate))
 
 	# output signal
 	omega, frequency_domain_signal = discrete_time_fourier_transform(time_domain_sequence)
+	if normalise:
+		frequency_domain_signal /= np.amax(np.abs(frequency_domain_signal))
 
 	########################################
 
@@ -105,6 +108,8 @@ if __name__ == '__main__':
 	ax.grid(True, which = 'minor', linewidth = 0.2)
 	ax.minorticks_on()
 	ax.set_xlim(-np.pi, np.pi)
+	if normalise:
+		ax.set_yticks(np.linspace(0, 1, 11))
 	fig.canvas.draw()
 
 	# fill text
@@ -114,8 +119,8 @@ if __name__ == '__main__':
 		ax.set_xticks([i * np.pi / 4 for i in range(-4, 5)])
 		ax.set_xlabel(r'$\omega$')
 	else:
-		ax.set_xticklabels([f'${i * sampling_rate / 12:.2f}$' for i in range(-6, 7)])
-		ax.set_xticks([i * np.pi / 6 for i in range(-6, 7)])
+		ax.set_xticklabels([f'${i * sampling_rate / 16:.2f}$' for i in range(-8, 9)])
+		ax.set_xticks([i * np.pi / 8 for i in range(-8, 9)])
 		ax.set_xlabel(r'$f/$Hz', **title_font)
 	ax.set_ylabel(r'$|X(e^{j\omega})|$')
 	ax.set_yticklabels([r'${}$'.format(t.get_text()) for t in ax.get_yticklabels()])
@@ -145,8 +150,8 @@ if __name__ == '__main__':
 		ax.set_xticks([i * np.pi / 4 for i in range(-4, 5)])
 		ax.set_xlabel(r'$\omega$')
 	else:
-		ax.set_xticklabels([f'${i * sampling_rate / 12:.2f}$' for i in range(-6, 7)])
-		ax.set_xticks([i * np.pi / 6 for i in range(-6, 7)])
+		ax.set_xticklabels([f'${i * sampling_rate / 16:.2f}$' for i in range(-8, 9)])
+		ax.set_xticks([i * np.pi / 8 for i in range(-8, 9)])
 		ax.set_xlabel(r'$f/$Hz', **title_font)
 	ax.set_yticklabels([r'$-\pi$', r'$-\dfrac{3\pi}{4}$', r'$-\dfrac{\pi}{2}$', r'$-\dfrac{\pi}{4}$', r'$0$', r'$\dfrac{\pi}{4}$', r'$\dfrac{\pi}{2}$', r'$\dfrac{3\pi}{4}$', r'$\pi$'])
 	ax.set_yticks([i * np.pi / 4 for i in range(-4, 5)])
