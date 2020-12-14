@@ -35,7 +35,7 @@ def discrete_time_fourier_transform(time_domain_sequence):
 	# which is why 'n_points' should be large (to imitate continuous variable behaviour)
 	# if 'n_points' equals 'len(time_domain_sequence)', the final output will be same as FFT
 	# because the number of elements in the input and output sequences will be the same
-	n_points = 100000
+	n_points = 1000
 	omega = np.linspace(-np.pi, np.pi, n_points)
 
 	# twiddle factor matrix
@@ -51,7 +51,8 @@ def discrete_time_fourier_transform(time_domain_sequence):
 
 if __name__ == '__main__':
 
-	sampling_rate = 100 # if it is not known, set this to `None'
+	sampling_rate = 1800 # if it is not known, set this to `None'
+	t = np.arange(0, 5, 1 / sampling_rate)
 	normalise = True # whether frequency magnitude should be normalised to the range from -1 to 1
 
 	# input sequence (values be greater than or equal to -1 but less than or equal to 1)
@@ -59,7 +60,8 @@ if __name__ == '__main__':
 	# time_domain_sequence = [-0.1294095225512604, -0.2241438680420134, 0.8365163037378079, -0.3415063509461096] # Db4 high-pass
 	# time_domain_sequence = [0.25, 0.75, 0.75, 0.25] # biorthogonal low-pass
 	# time_domain_sequence = [-0.25, -0.75, 0.75, 0.25] # biorthogonal high-pass
-	time_domain_sequence = np.sin(2 * np.pi * 20 * np.arange(0, 1, 1 / sampling_rate))
+	# time_domain_sequence = np.sin(2 * np.pi * 20 * np.arange(0, 1, 1 / sampling_rate))
+	time_domain_sequence = np.cos(2 * np.pi * 1000 * t)
 
 	# output signal
 	omega, frequency_domain_signal = discrete_time_fourier_transform(time_domain_sequence)
@@ -72,14 +74,14 @@ if __name__ == '__main__':
 	fig = plt.figure()
 	fig.canvas.set_window_title('Discrete Fourier Transform')
 	ax = fig.add_subplot(1, 1, 1)
-	ax.stem(time_domain_sequence, linefmt = 'r-', markerfmt = 'ro', basefmt = ' ', use_line_collection = True)
+	ax.plot(time_domain_sequence, color = 'red', linewidth = 0.8)
 
 	# appearance settings
 	h_length = len(time_domain_sequence)
 	ax.axhline(linewidth = 1.6, color = 'k')
 	ax.axvline(linewidth = 1.6, color = 'k')
 	ax.grid(True, which = 'major', linewidth = 0.6)
-	ax.grid(True, which = 'minor', linewidth = 0.2)
+	ax.grid(True, which = 'minor', linewidth = 0.3)
 	ax.minorticks_on()
 	ax.set_xlim(0, h_length - 1)
 	ax.set_ylim(-1, 1)
@@ -93,6 +95,8 @@ if __name__ == '__main__':
 	ax.set_xticklabels([r'${}$'.format(t.get_text()) for t in ax.get_xticklabels()])
 	ax.set_yticklabels([r'${}$'.format(t.get_text()) for t in ax.get_yticklabels()])
 
+	fig.tight_layout(pad = 1)
+
 	########################################
 
 	# open a window to display signal magnitude
@@ -105,7 +109,7 @@ if __name__ == '__main__':
 	ax.axhline(linewidth = 1.6, color = 'k')
 	ax.axvline(linewidth = 1.6, color = 'k')
 	ax.grid(True, which = 'major', linewidth = 0.6)
-	ax.grid(True, which = 'minor', linewidth = 0.2)
+	ax.grid(True, which = 'minor', linewidth = 0.3)
 	ax.minorticks_on()
 	ax.set_xlim(-np.pi, np.pi)
 	if normalise:
@@ -119,11 +123,13 @@ if __name__ == '__main__':
 		ax.set_xticks([i * np.pi / 4 for i in range(-4, 5)])
 		ax.set_xlabel(r'$\omega$')
 	else:
-		ax.set_xticklabels([f'${i * sampling_rate / 16:.2f}$' for i in range(-8, 9)])
-		ax.set_xticks([i * np.pi / 8 for i in range(-8, 9)])
+		ax.set_xticklabels([f'${i * sampling_rate / 20:.2f}$' for i in range(-10, 11)])
+		ax.set_xticks([i * np.pi / 10 for i in range(-10, 11)])
 		ax.set_xlabel(r'$f/$Hz', **title_font)
 	ax.set_ylabel(r'$|X(e^{j\omega})|$')
 	ax.set_yticklabels([r'${}$'.format(t.get_text()) for t in ax.get_yticklabels()])
+
+	fig.tight_layout(pad = 1)
 
 	########################################
 
@@ -137,7 +143,7 @@ if __name__ == '__main__':
 	ax.axhline(linewidth = 1.6, color = 'k')
 	ax.axvline(linewidth = 1.6, color = 'k')
 	ax.grid(True, which = 'major', linewidth = 0.6)
-	ax.grid(True, which = 'minor', linewidth = 0.2)
+	ax.grid(True, which = 'minor', linewidth = 0.3)
 	ax.minorticks_on()
 	ax.set_xlim(-np.pi, np.pi)
 	ax.set_ylim(-np.pi, np.pi)
@@ -150,11 +156,13 @@ if __name__ == '__main__':
 		ax.set_xticks([i * np.pi / 4 for i in range(-4, 5)])
 		ax.set_xlabel(r'$\omega$')
 	else:
-		ax.set_xticklabels([f'${i * sampling_rate / 16:.2f}$' for i in range(-8, 9)])
-		ax.set_xticks([i * np.pi / 8 for i in range(-8, 9)])
+		ax.set_xticklabels([f'${i * sampling_rate / 20:.2f}$' for i in range(-10, 11)])
+		ax.set_xticks([i * np.pi / 10 for i in range(-10, 11)])
 		ax.set_xlabel(r'$f/$Hz', **title_font)
 	ax.set_yticklabels([r'$-\pi$', r'$-\dfrac{3\pi}{4}$', r'$-\dfrac{\pi}{2}$', r'$-\dfrac{\pi}{4}$', r'$0$', r'$\dfrac{\pi}{4}$', r'$\dfrac{\pi}{2}$', r'$\dfrac{3\pi}{4}$', r'$\pi$'])
 	ax.set_yticks([i * np.pi / 4 for i in range(-4, 5)])
+
+	fig.tight_layout(pad = 1)
 
 	plt.show()
 
